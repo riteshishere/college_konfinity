@@ -1,0 +1,95 @@
+/* Header */
+.header{
+    padding: 40px;
+    text-align: center;
+    background-color: purple;
+    color: white;
+}
+
+/* Top navigation bar */
+.navbar{
+    display: flex;
+    flex-wrap: nowrap;
+    background-color: #25d0bd;
+}
+
+/* Link in navigation bar */
+.navbar > a{
+    color: blue;
+    padding: 14px 20px;
+    text-decoration: none;
+    text-align: center;
+}
+
+/* When link in navigation bar will be hovered */
+.navbar > a:hover{
+    color: blueviolet!important;
+    background-color: black!important;
+}
+
+/* Flex-container */
+.row{
+    display: flex;
+    flex-wrap: wrap;
+}
+
+/* unordered list
+ul{
+    display: -webkit-box;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    flex-direction: column;
+}
+li{
+    background: #fcf9eb;
+    border-left: 8px solid #EF9B25!important;
+}
+ul,li{
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 100%;
+    font: inherit;
+    vertical-align: baseline;
+} */
+
+/* Create two unequal columns next to each other */
+/* Side bar */
+.side{
+    flex: 30%;
+    background-image: linear-gradient(to bottom right, yellow, #ff33ff);
+    /* background-color: #2d338148; */
+    padding: 20px;
+}
+
+/* Main bar */
+.main{
+    flex: 70%;
+    background-image: linear-gradient(to bottom left, yellow, #ff33ff);
+    /* background-color: white; */
+    padding: 20px;
+}
+
+/* Fake picture */
+.fake-img{
+    background-color: #aaa;
+    width: 100%;
+    padding: 20px;
+}
+
+/* Footer */
+.footer{
+    padding: 20px;
+    text-align: center;
+    color: white;
+    background-color: black;
+}
+
+/* Responsive screen */
+@media (max-width: 700px) {
+    .navbar, .row{
+        flex-direction: column;
+    }
+}

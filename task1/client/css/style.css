@@ -1,0 +1,99 @@
+h1{font-size:36px;}
+h2{font-size:30px}
+h3{font-size:24px}
+h4{font-size:20px}
+h5{font-size:18px}
+h6{font-size:16px}
+form {
+    width: 50%;
+    max-width: 450px;
+    margin: 10px auto;
+    padding: 10px 30px;
+    background: #f4f7f8;
+    border-radius: 8px;
+}
+form:hover{
+    background-image: linear-gradient(to bottom left, red, violet);
+}
+input[type="text"],
+input[type="password"],
+input[type="date"],
+input[type="datetime"],
+input[type="email"],
+input[type="number"],
+input[type="file"],
+input[type="tel"],
+input[type="time"],
+input[type="url"],
+textarea,
+select {
+    border: none;
+    font-size: 20px;
+    height: auto;
+    margin: 0;
+    outline: 0;
+    padding: 5px;
+    width: 100%;
+    background-color: #e8eeef;
+    color: darkmagenta;
+    box-shadow: 2px 3px 0 rgba(0,0,0,0.03) inset;
+    border-radius: 5px;
+    margin-bottom: 15px;
+}
+input[type="radio"],
+input[type="checkbox"] {
+    margin: 0 4px 8px 0;
+}
+select {
+    padding: 5px 0;
+    height: 32px;
+    border-radius: 5px;
+}
+button {
+    padding: 10px 5px;
+    color: blue;
+    background-color: #25d0bd;
+    font-size: 18px;
+    text-align: center;
+    text-decoration: none;
+    font-style: normal;
+    width: 100%;
+    font-weight: bolder;
+    border-radius: 20px;
+    border: 1px solid #25d0bd;
+    border-width: 1px 1px 3px;
+    box-shadow: 0 -1px 0 rgba(255, 255, 255, 0.1) inset;
+    margin-bottom: 10px;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.05s ease-in-out;
+}
+button:hover{
+    cursor: pointer;
+    color: blueviolet;
+    background-color: black;
+    box-shadow: 2 -1px 0 black ;
+    border-color: blueviolet;
+}
+fieldset {
+    margin-bottom: 30px;
+    border: none;
+}
+
+legend {
+    font-size: 1.4em;
+    margin-bottom: 10px;
+}
+label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 2px;
+}
+
+label.light {
+    font-weight: 300;
+    display: inline;
+}
+@media screen and (max-width: 480px) {
+    form {
+        width: 75%!important;
+    }
+}

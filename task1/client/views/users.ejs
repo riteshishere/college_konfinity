@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Users List</title>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css?family=Pacifico&amp;display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/flexLayout.css">
+    <!-- <script src="/script/script.js"></script> -->
+    <style>
+        *{
+            box-sizing: border-box;
+        }
+        /* style the body */
+        body{
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+        h1{
+            text-align: center;
+        }
+        hr{
+            color: purple;
+        }
+        
+
+        .form-btn{
+            width: auto!important;
+            margin: 0!important;
+            padding: 0!important;
+            background: inherit
+        }
+        .form-btn:hover{
+            background-image: inherit;
+        }
+        
+        /* Grid */
+        .grid-container {
+            display: grid;
+            margin-left: 1rem;
+            padding: 0;
+        }
+        .grid-container > div{
+            padding: 0;
+        }
+        .grid-user {
+            margin-left: 1rem;
+            margin-right: 1rem;
+            grid-column: 1 / span 70;
+            text-align: left;
+            font-weight: bolder;
+        }
+        .grid-editbutton {
+            padding: 3px;
+            grid-column: 71 / span 1;
+        }
+        .grid-delbutton {
+            padding: 3px;
+            grid-column: 72 / span 1;
+        }
+        /* .grid-item {
+            padding: 10px;
+            text-align: center;
+        } */
+        .btn-edit {
+            color: #fff;
+            background-color: #17a2b8;
+            border-color: #17a2b8;
+        }
+        .btn-del {
+            color: #fff;
+            background-color: purple;
+            border-color: #dc3545;
+        }
+        .btn {
+            cursor: pointer;
+            font-size: 1rem;
+            line-height: 1.5;
+            border: 3px solid #ced4da;
+            border-radius: 0.5rem;
+            transition: border-color 0.15s ease-in-out, box-shadow 0.05s ease-in-out;
+        }
+        .far{
+            font-family: "Font Awesome 5 Free";
+            font-weight: 400;
+            -webkit-font-smoothing: antialiased;
+            display: inline-block;
+            font-style: normal;
+            font-variant: normal;
+            text-rendering: auto;
+            line-height: 1;
+        }
+        .fa-edit:before {
+            content: "\f044";
+        }
+        .fa-trash-alt:before {
+            content: "\f2ed";
+        }
+
+
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <h1>College Konfinity</h1>
+        <p>With <b>Flexbox</b> layout</p>
+    </div>
+
+    <!-- Navigation panel -->
+    <div class="navbar">
+        <a href="#">Link1</a>
+        <a href="#">Link2</a>
+        <a href="#">Link3</a>
+        <a href="#">Link4</a>
+        <a href="#">Link5</a>
+    </div>
+
+    <!-- The flexible content -->
+    <div class="row">
+
+        <!-- SideBar -->
+        <div class="side">
+            <h2>About College</h2>
+            <h5>Photo of Dean(SA)</h5>
+            <div class="fake-img" style="height: 200px;"> Image </div>
+            <p>Some text about me in culpa qui officia deserunt mollit anim..</p>
+            <h3>More Text</h3>
+            <p>Lorem ipsum dolor sit ame.</p>
+            <div class="fake-img" style="height: 60px;"> Image </div>
+            <br>
+            <div class="fake-img" style="height: 60px;"> Image </div>
+            <br>
+            <div class="fake-img" style="height: 60px;"> Image </div>
+        </div>
+        
+        <!-- MainBar -->
+        <div class="main">
+            <!-- First Headng -->
+
+            <h1>List of Users</h1>
+            <% if(users){ %>
+                <% if(users.length===0){ %>
+                    <ul><li><b>There are no users</b></li></ul>
+                    <% }  %>
+                
+                    <% for(var i=0; i<users.length; i++){ %>
+                        <div class="grid-container">
+                            <div class="grid-item grid-user"><%=users[i].name%></div>
+                            <div class="grid-item grid-editbutton">
+                                <form class="form-btn" method="POST" action="/edit?id:<%=users[i]._id%>">
+                                  <button class="btn btn-edit" type="submit" id="id" name="id" value=<%=users[i]._id%>>
+                                    <i class="far fa-edit"></i>
+                                  </button>
+                                </form>
+                            </div>
+                            <div class="grid-item grid-delbutton">
+                                <form class="form-btn" method="POST" action="/del">
+                                  <button class="btn btn-del" type="submit" id="id" name="id" value=<%=users[i]._id%>>
+                                    <i class="far fa-trash-alt"></i>
+                                  </button>
+                                </form>
+                            </div>
+                        </div>
+                        <% if(users[i].edit === true){ %>
+                            <!-- form for editing -->
+                            <form action="/update?id:<%=users[i]._id%>" method="POST" >
+                                <h1>Edit it</h1>
+                                <legend>User Basic Info</legend>
+                                <label for="user_name">Name:</label>
+                                <input type="text" name="user_name" id="user_name" maxlength="20" value="<%=users[i].name%>" required>
+                        
+                                <label for="college">College:</label>
+                                <input type="text" name="college" id="college" maxlength="50" value="<%=users[i].college%>" required>
+                        
+                                <label for="branch">Branch:</label>
+                                <input type="text" name="branch" id="branch" value="<%=users[i].branch%>" required>
+                        
+                                <label for="gender">Gender:</label>
+                                <select name="gender" id="gender" required>
+                                    <% if(users[i].gender==="m"){ %>
+                                        <option value="">Select</option>
+                                        <option value="f">Female</option>
+                                        <option value="m" selected>Male</option>
+                                    <% } else { %>
+                                        <option value="">Select</option>
+                                        <option value="f" selected>Female</option>
+                                        <option value="m">Male</option>
+                                    <% } %>
+                                </select>
+                        
+                                <label for="dob">Date Of Birth:</label>
+                                <input type="date" name="dob" id="dob" value="<%=users[i].dob%>" required>
+                        
+                                <label for="phone">Contact Number</label>
+                                <input type="text" name="phone" id="phone" value="<%=users[i].phone%>" maxlength="10" minlength="10" required>
+                        
+                                <label for="email">Email:</label>
+                                <input type="email" name="email" id="email" value="<%=users[i].email%>" required>
+                        
+                                <label for="current_addr">Current address:</label>
+                                <input type="text" name="current_addr" id="current_addr" value="<%=users[i].current_addr%>" maxlength="50" required>
+                        
+                                <label for="permanent_addr">Permanent address:</label>
+                                <input type="checkbox" name="addr" id="addr" onclick="copyAddress()">Same as current address
+                                <input type="text" name="permanent_addr" id="permanent_addr" value="<%=users[i].permanent_addr%>" maxlength="50" required>
+                        
+                                <label for="profile_pic">Profile pic:</label>
+                                <input type="file" name="profile_pic" id="profile_pic">
+                                <img style="border:1px solid gray;width:100px;"  id="preview" src="/image/avtar.png">
+                                <input type="hidden" id="avatar-url" name="avatar-url" value="/image/avtar.png">
+                                <!-- <button type="reset" style="width: 50%;">Reset</button> -->
+                                <button type="submit" name="id" value="<%=users[i]._id%>">Update</button>
+                            </form>
+                            <script>
+                                function copyAddress() {
+                                    if (document.getElementById("addr").checked ===true){
+                                        var x = document.getElementById("current_addr").value;
+                                        document.getElementById("permanent_addr").value = x;
+                                    }
+                                    else{
+                                        document.getElementById("permanent_addr").value = "";
+                                    }
+                                }
+
+                            </script>
+                        <% } %>
+                    <% } %>
+                
+                <hr>
+            <% } %>
+
+            <button onclick="window.location.href = '/register';">Register</button>
+            <h5>Title description <span>December 25, 2019</span></h5>
+            <div class="fake-img" style="height: 200px;"> Image </div>
+            <p>Some text..</p>
+            <p>Sunt in culpa qui officia deserunt mollit anim id est 
+                laborum consectetur adipiscing elit, sed do eiusmod tempor 
+                incididunt ut labore et dolore magna aliqua. Ut enim ad minim 
+                veniam, quis nostrud exercitation ullamco.</p>
+            <br>
+
+            <!-- Second heading -->
+            <h2>TITLE HEADING</h2>
+            <h5>Title description, Sep 2, 2017</h5>
+            <div class="fake-img" style="height:200px;">Image</div>
+            <p>Some text..</p>
+            <p>Sunt in culpa qui officia deserunt mollit anim id est 
+                laborum consectetur adipiscing elit, sed do eiusmod 
+                tempor incididunt ut labore et dolore magna aliqua. 
+                Ut enim ad minim veniam, quis nostrud exercitation ullamco.
+            </p>
+        <!-- End of main bar -->
+        </div>
+    <!-- End of flexible content -->
+    </div>
+    <div class="footer">
+        <h2>Footer</h2>
+    </div>
+</body>
+</html>

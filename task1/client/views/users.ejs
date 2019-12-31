@@ -9,7 +9,7 @@
     <link href="https://fonts.googleapis.com/css?family=Pacifico&amp;display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/flexLayout.css">
-    <!-- <script src="/script/script.js"></script> -->
+    <script src="/script/script.js"></script>
     <style>
         *{
             box-sizing: border-box;
@@ -167,7 +167,7 @@
                         </div>
                         <% if(users[i].edit === true){ %>
                             <!-- form for editing -->
-                            <form action="/update?id:<%=users[i]._id%>" method="POST" >
+                            <form action="/update?id:<%=users[i]._id%>" encType="multipart/form-data" method="POST" >
                                 <h1>Edit it</h1>
                                 <legend>User Basic Info</legend>
                                 <label for="user_name">Name:</label>
@@ -209,24 +209,12 @@
                                 <input type="text" name="permanent_addr" id="permanent_addr" value="<%=users[i].permanent_addr%>" maxlength="50" required>
                         
                                 <label for="profile_pic">Profile pic:</label>
-                                <input type="file" name="profile_pic" id="profile_pic">
+                                <input type="file" name="profile_pic" id="profile_pic" required>
                                 <img style="border:1px solid gray;width:100px;"  id="preview" src="/image/avtar.png">
                                 <input type="hidden" id="avatar-url" name="avatar-url" value="/image/avtar.png">
                                 <!-- <button type="reset" style="width: 50%;">Reset</button> -->
                                 <button type="submit" name="id" value="<%=users[i]._id%>">Update</button>
                             </form>
-                            <script>
-                                function copyAddress() {
-                                    if (document.getElementById("addr").checked ===true){
-                                        var x = document.getElementById("current_addr").value;
-                                        document.getElementById("permanent_addr").value = x;
-                                    }
-                                    else{
-                                        document.getElementById("permanent_addr").value = "";
-                                    }
-                                }
-
-                            </script>
                         <% } %>
                     <% } %>
                 

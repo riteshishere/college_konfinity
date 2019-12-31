@@ -1,4 +1,5 @@
 const express = require("express");
+const fileupload = require("express-fileupload");
 const session = require("express-session");
 const router = express.Router();
 const app = express();
@@ -13,6 +14,7 @@ app.use(cors());
 app.use(compression());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+app.use(fileupload());
 app.use(bodyParser.urlencoded({
   extended: true
 }));

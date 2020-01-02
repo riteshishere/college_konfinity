@@ -8,7 +8,6 @@ const compression = require("compression");
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
-const path = require("path");
 const mainRoutes = require("./task1/backend/routes/mainRoutes");
 app.use(cors());
 app.use(compression());

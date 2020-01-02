@@ -49,10 +49,10 @@ let userSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    // profile_pic: {
-    //     type: String,
-    //     required:true
-    // },
+    profile_pic: {
+        type: String,
+        required:true
+    },
     edit: {
         type: Boolean,
         required: true

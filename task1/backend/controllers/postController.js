@@ -1,20 +1,24 @@
 // const express = require('express');
 // const app = express(); 
 // const fileUpload = require('express-fileupload');
+// const multer = require("multer");
+// const multerS3 = require("multer-s3");
+// app.use(fileUpload());
+// aws.config.loadFromPath(__dirname+"/data.json");
 const aws = require("aws-sdk");
-const multer = require("multer");
-const multerS3 = require("multer-s3");
 const dbConn = require("../database/mongoDatabase.js");
 const db_users = dbConn.users;
 const s3 = new aws.S3();
-// app.use(fileUpload());
-// aws.config.loadFromPath(__dirname+"/data.json");
-process.env.AWS_ACCESS_KEY_ID = "AKIAIQQTWOHMZ77NPBOQ";
-process.env.AWS_SECRET_ACCESS_KEY = "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"
+process.env.AWS_ACCESS_KEY_ID = "AKIAILZRN2J4PZXNOUDQ";
+process.env.AWS_SECRET_ACCESS_KEY = "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";
+myConfig = new aws.Config();
+myConfig.update({
+  region: 'ap-south-1'
+});
 // var upload = multer({
 //   storage: multerS3({
 //     s3: s3,
-//     bucket: 'riteshraj',
+//     bucket: 'riteshraj/images',
 //     acl : 'public-read-write',
 //     metadata: function (req, file, cb) {
 //       cb(null, {fieldName: "TESTING_METADATA"});
@@ -24,7 +28,7 @@ process.env.AWS_SECRET_ACCESS_KEY = "neM73zMkNKpAgB+BQogf8zFyUtKpq3veVJQ2a23e"
 //     }
 //   })
 // })
-
+// app.use(multer({dest:'./uploads/'}));
 // const singleUpload = upload.single("profile_pic");
 
 async function register(req,res){
@@ -38,39 +42,55 @@ async function register(req,res){
       phone,
       email,
       current_addr,
-      permanent_addr,
-      profile_pic
+      permanent_addr
   } = req.body ;
-  console.log("profile pic is .....",profile_pic);
+  console.log("files details are",req.files);
   if(!(user_name && college && branch && gender && dob && phone && email && current_addr && permanent_addr)){
     res.redirect("/signup");
-  }                                     
+  }
   // ending of if block
   else{
-    db_users.create({
-      name            : user_name,
-      email           : email,
-      college         : college,
-      branch          : branch,
-      gender          : gender,
-      dob             : dob,
-      phone           : phone,
-      email           : email,
-      current_addr    : current_addr,
-      permanent_addr  : permanent_addr,
-      edit            : false
-    },function (err, user) {
-        if (err){
-          console.log(err);
-          res.redirect("/signup");
-        }
-        else{
-          console.log("new user detail ",user);
-          console.log("new user name is",user.name);
-          res.redirect("/");
-        }
+    var params = {Bucket: 'riteshraj/image', 
+                Key: email, 
+                Body: req.files.profile_pic.data,
+                AVL: "public-read-write",
+                StorageClass: "STANDARD"};
+    s3.upload(params, function(err, data) {
+      if(err){
+        console.log(err);
       }
-    );
+      else{
+        console.log("data uploaded are", data.Location);
+        uploading(data.Location);
+      }
+    });
+    function uploading(address){
+      db_users.create({
+        name            : user_name,
+        email           : email,
+        college         : college,
+        branch          : branch,
+        gender          : gender,
+        dob             : dob,
+        phone           : phone,
+        email           : email,
+        current_addr    : current_addr,
+        permanent_addr  : permanent_addr,
+        profile_pic     : address,
+        edit            : false
+      },function (err, user) {
+          if (err){
+            console.log(err);
+            res.redirect("/signup");
+          }
+          else{
+            console.log("new user detail ",user);
+            console.log("new user name is",user.name);
+            res.redirect("/");
+          }
+        }
+      );
+    }
   }                                    // ending of else block
 };
 
@@ -170,49 +190,34 @@ async function update(req,res){
     current_addr,
     permanent_addr
   } = req.body ;
-  console.log(req.files.profile_pic);
+  console.log("files details are",req.files);
   const id = req.param('id');
-  // working lines
-  // myConfig = new aws.Config();
-  // myConfig.update({
-  //   region: 'us-east-1',
-  //   // secretAccessKey : "neM73zMkNKpAgB+BQogf8zFyUtKpq3veVJQ2a23e",
-  //   // accessKeyId : "AKIAIQQTWOHMZ77NPBOQ"
-  // });
+  // working pic uploading lines
+  // fetching credentials
+  // 
   // aws.config.getCredentials(function(err) {
   //   if (err) console.log(err.stack);
   //   // credentials not loaded
   //   else {
-  //     console.log("aws credentisl????????",aws.config.credentials.region);
   //     console.log("Access key:", aws.config.credentials.accessKeyId);
   //     console.log("Secret access key:", aws.config.credentials.secretAccessKey);
   //   }
   // });
-  // var params = {Bucket: 'riteshraj/image', 
-  //               Key: req.files.profile_pic.name, 
-  //               Body: req.files.profile_pic.data,
-  //               AVL: "public-read-write", 
-  //               StorageClass: "STANDARD"};
-  // var address = s3.upload(params, function(err, data) {
-  //   if(err){
-  //     console.log(err);
-  //   }
-  //   else{
-  //     console.log("data uploaded are", data);
-  //     return data.Location;
-  //   }
-  // });
-  // console.log("location to be updated is :", address);
-  // till here 
-  if(!(user_name && college && branch && gender && dob && phone && email && current_addr && permanent_addr && id)){
-    res.redirect("/");
-  }
-  else{
-    console.log("ID of user to be updated is: ---",id);
-    // singleUpload(req, res, function(err){
-    //   console.log("file is", req.files);
-    //   return res.json({'imageurl': req.files.length});
-    // });
+  var params = {Bucket: 'riteshraj/image', 
+                Key: email, 
+                Body: req.files.profile_pic.data,
+                AVL: "public-read-write",
+                StorageClass: "STANDARD"};
+  s3.upload(params, function(err, data) {
+    if(err){
+      console.log(err);
+    }
+    else{
+      console.log("data uploaded are", data);
+      uploading(data.Location);
+    }
+  });
+  async function uploading(address){
     const response = await db_users.update({ _id : id }, {
       name            : user_name,
       email           : email,
@@ -224,7 +229,7 @@ async function update(req,res){
       email           : email,
       current_addr    : current_addr,
       permanent_addr  : permanent_addr,
-      // profile_pic     : address,
+      profile_pic     : address,
       edit            : false
     });
     if(response.nModified === 1){
@@ -235,6 +240,29 @@ async function update(req,res){
       console.log("Error in updating user",response);
       res.redirect("/");
     }
+  }
+    // const response = await db_users.update({ _id : id }, {
+    //   name            : user_name,
+    //   email           : email,
+    //   college         : college,
+    //   branch          : branch,
+    //   gender          : gender,
+    //   dob             : dob,
+    //   phone           : phone,
+    //   email           : email,
+    //   current_addr    : current_addr,
+    //   permanent_addr  : permanent_addr,
+    //   // profile_pic     : address,
+    //   edit            : false
+    // });
+    // if(response.nModified === 1){
+    //   console.log("user updated successfully");
+    //   res.redirect("/");
+    // }
+    // else{
+    //   console.log("Error in updating user",response);
+    //   res.redirect("/");
+    // }
     // db_users.update({ id : id }, {
     //   name            : user_name,
     //   email           : email,
@@ -257,7 +285,7 @@ async function update(req,res){
     //       res.redirect("/");
     //     }
     //   });
-  }
+  // }
 }
 
 // let update = (req,res) => {

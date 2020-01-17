@@ -53,7 +53,7 @@ async function register(req,res){
     var params = {Bucket: 'riteshraj/image', 
                 Key: email, 
                 Body: req.files.profile_pic.data,
-                AVL: "public-read-write",
+                ACL: "public-read-write",
                 StorageClass: "STANDARD"};
     s3.upload(params, function(err, data) {
       if(err){
@@ -188,7 +188,8 @@ async function update(req,res){
     phone,
     email,
     current_addr,
-    permanent_addr
+    permanent_addr,
+    pic_url
   } = req.body ;
   console.log("files details are",req.files);
   const id = req.param('id');
@@ -203,20 +204,26 @@ async function update(req,res){
   //     console.log("Secret access key:", aws.config.credentials.secretAccessKey);
   //   }
   // });
-  var params = {Bucket: 'riteshraj/image', 
-                Key: email, 
-                Body: req.files.profile_pic.data,
-                AVL: "public-read-write",
-                StorageClass: "STANDARD"};
-  s3.upload(params, function(err, data) {
-    if(err){
-      console.log(err);
-    }
-    else{
-      console.log("data uploaded are", data);
-      uploading(data.Location);
-    }
-  });
+  if(req.files){
+    var params = {Bucket: 'riteshraj/image', 
+                  Key: email, 
+                  Body: req.files.profile_pic.data,
+                  ACL: "public-read-write",
+                  StorageClass: "STANDARD"};
+    s3.upload(params, function(err, data) {
+      if(err){
+        console.log(err);
+      }
+      else{
+        console.log("data uploaded are", data);
+        uploading(data.Location);
+      }
+    });
+  }
+  else{
+    console.log("no file to be uploaded");
+    uploading(pic_url);
+  }
   async function uploading(address){
     const response = await db_users.update({ _id : id }, {
       name            : user_name,

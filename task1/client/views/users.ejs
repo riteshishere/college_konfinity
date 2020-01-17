@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="google-signin-scope" content="profile email">
+    <meta name="google-signin-client_id" content="854799443491-dr8g7msq5civdvmdt3ot79rmt8knkt7q.apps.googleusercontent.com">
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
     <title>Users List</title>
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
     <link href="https://fonts.googleapis.com/css?family=Pacifico&amp;display=swap" rel="stylesheet">
@@ -37,34 +40,57 @@
             background-image: inherit;
         }
         
-        /* Grid */
-        .grid-container {
-            display: grid;
+        /* Flex */
+        .flex-container {
+            /* display: grid; */
+            display: flex;
+            flex-direction: row;
             margin-left: 1rem;
             padding: 0;
+            align-items: center;
         }
-        .grid-container > div{
+        .flex-container > div{
             padding: 0;
         }
-        .grid-user {
+        .flex-user {
             margin-left: 1rem;
             margin-right: 1rem;
-            grid-column: 1 / span 70;
+            /* grid-column: 1 / span 70; */
+            flex: 2;
+            justify-content: center;
             text-align: left;
             font-weight: bolder;
         }
-        .grid-editbutton {
+        .flex-editbutton {
             padding: 3px;
-            grid-column: 71 / span 1;
+            /* grid-column: 71 / span 1; */
+            flex: 0.5;
+            max-width: 45px;
         }
-        .grid-delbutton {
+        .flex-delbutton {
             padding: 3px;
-            grid-column: 72 / span 1;
+            /* grid-column: 72 / span 1; */
+            flex: 0.5;
+            max-width: 45px;
         }
-        /* .grid-item {
+        /* .flex-item {
             padding: 10px;
             text-align: center;
         } */
+        .user-img{
+            max-width: 2.5rem;
+            height: 2.5rem;
+            margin-right: 1rem;
+            display: inline-block;
+            overflow: hidden;
+        }
+        img{
+            width: 100%;
+            height: 100%;
+            -o-object-fit: cover;
+            object-fit: cover;
+            border-radius: 37%;
+        }
         .btn-edit {
             color: #fff;
             background-color: #17a2b8;
@@ -148,16 +174,17 @@
                     <% }  %>
                 
                     <% for(var i=0; i<users.length; i++){ %>
-                        <div class="grid-container">
-                            <div class="grid-item grid-user"><%=users[i].name%></div>
-                            <div class="grid-item grid-editbutton">
+                        <div class="flex-container">
+                            <div class="user-img"><img src="<%=users[i].profile_pic%>" alt="profile pic"></div>
+                            <div class="flex-user"><%=users[i].name%></div>
+                            <div class="flex-editbutton">
                                 <form class="form-btn" method="POST" action="/edit?id:<%=users[i]._id%>">
                                   <button class="btn btn-edit" type="submit" id="id" name="id" value=<%=users[i]._id%>>
                                     <i class="far fa-edit"></i>
                                   </button>
                                 </form>
                             </div>
-                            <div class="grid-item grid-delbutton">
+                            <div class="flex-delbutton">
                                 <form class="form-btn" method="POST" action="/del">
                                   <button class="btn btn-del" type="submit" id="id" name="id" value=<%=users[i]._id%>>
                                     <i class="far fa-trash-alt"></i>
@@ -209,7 +236,8 @@
                                 <input type="text" name="permanent_addr" id="permanent_addr" value="<%=users[i].permanent_addr%>" maxlength="50" required>
                         
                                 <label for="profile_pic">Profile pic:</label>
-                                <input type="file" name="profile_pic" id="profile_pic" required>
+                                <input type="file" name="profile_pic" id="profile_pic">
+                                <input type="hidden" name="pic_url" value="<%=users[i].profile_pic%>">
                                 <!-- <button type="reset" style="width: 50%;">Reset</button> -->
                                 <button type="submit" name="id" value="<%=users[i]._id%>">Update</button>
                             </form>
@@ -228,7 +256,7 @@
                 incididunt ut labore et dolore magna aliqua. Ut enim ad minim 
                 veniam, quis nostrud exercitation ullamco.</p>
             <br>
-
+            <button onclick="oauth()">OAuth Request</button>
             <!-- Second heading -->
             <h2>TITLE HEADING</h2>
             <h5>Title description, Sep 2, 2017</h5>
@@ -239,6 +267,7 @@
                 tempor incididunt ut labore et dolore magna aliqua. 
                 Ut enim ad minim veniam, quis nostrud exercitation ullamco.
             </p>
+            <!-- <div class="g-signin2" data-onsuccess="onSignIn" data-theme="dark"></div> -->
         <!-- End of main bar -->
         </div>
     <!-- End of flexible content -->
@@ -246,5 +275,31 @@
     <div class="footer">
         <h2>Footer</h2>
     </div>
+    <script>
+        function oauth(){
+            var client_id = "5fda0a1aa960e4af462d5c997ce3dfe558149d610134d68d7b4cb0462c12d2ea";
+            var secret = "1c898bf4c154100e6fa4d7f5c03676d0d36d74f9a159981f0e1f619b1281ed25";
+            var redirect_uri = "https://github.com/riteshishere/college_konfinity.git";
+            // var redirect_uri = "http://localhost:4000/register";
+            var request = "https://gitlab.com/oauth/authorize?client_id="+client_id+"&redirect_uri="+redirect_uri+
+                            "&response_type=token&scope=read_repository+profile";
+            window.location.href=request;
+        }
+        function onSignIn(googleUser) {
+            // window.location.href = "https://workspace.konfinity.com/riteshraj";
+            // Useful data for your client-side scripts:
+            var profile = googleUser.getBasicProfile();
+            alert("ID: " + profile.getId()); // Don't send this directly to your server!
+            alert('Full Name: ' + profile.getName());
+            console.log('Given Name: ' + profile.getGivenName());
+            console.log('Family Name: ' + profile.getFamilyName());
+            console.log("Image URL: " + profile.getImageUrl());
+            console.log("Email: " + profile.getEmail());
+
+            // The ID token you need to pass to your backend:
+            var id_token = googleUser.getAuthResponse().id_token;
+            console.log("ID Token: " + id_token);
+        }
+    </script>
 </body>
 </html>

@@ -70,7 +70,7 @@ button:hover{
     cursor: pointer;
     color: blueviolet;
     background-color: black;
-    box-shadow: 2 -1px 0 black ;
+    box-shadow: 2px -1px 0 black ;
     border-color: blueviolet;
 }
 fieldset {

@@ -340,9 +340,16 @@ async function update(req,res){
 //   }
 // }
 
+
+let test = async(req,res) =>{
+  let {value} = req.body;
+  console.log("From backend ",value);
+}
+
 module.exports = {
     register      : register,
     delete        : del,
     edit          : edit,
-    update        : update
+    update        : update,
+    test          : test
 }

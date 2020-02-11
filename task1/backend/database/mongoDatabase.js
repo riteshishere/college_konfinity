@@ -1,7 +1,7 @@
 let mongoose = require('mongoose')
 let validator = require('validator')
 
-mongoose.connect("mongodb://localhost/userData", {useNewUrlParser: true});
+mongoose.connect("mongodb://localhost/userData", {useNewUrlParser: true,useUnifiedTopology: true });
 
 mongoose.connection
     .once("open", () => { console.log("Connected to database");

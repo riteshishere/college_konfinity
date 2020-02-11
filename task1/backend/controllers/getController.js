@@ -33,7 +33,12 @@ let register = (req,res) => {
     res.render("newregister");
 }
 
+let test = (req,res)=>{
+    res.render("testing");
+}
+
 module.exports = {
     users : users,
-    register: register
+    register: register,
+    test: test
 };

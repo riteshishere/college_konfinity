@@ -1,20 +1,71 @@
-// const express = require('express');
-// const app = express(); 
-// const fileUpload = require('express-fileupload');
-// const multer = require("multer");
-// const multerS3 = require("multer-s3");
-// app.use(fileUpload());
-// aws.config.loadFromPath(__dirname+"/data.json");
-const aws = require("aws-sdk");
+const {GoogleSpreadsheet} = require("google-spreadsheet");
+const cred = require("./client_secret.json");
+const AWS = require("aws-sdk");
 const dbConn = require("../database/mongoDatabase.js");
 const db_users = dbConn.users;
-const s3 = new aws.S3();
-process.env.AWS_ACCESS_KEY_ID = "AKIAILZRN2J4PZXNOUDQ";
-process.env.AWS_SECRET_ACCESS_KEY = "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";
-myConfig = new aws.Config();
-myConfig.update({
-  region: 'ap-south-1'
+// const s3 = new aws.S3();
+// process.env.AWS_ACCESS_KEY_ID = "AKIAILZRN2J4PZXNOUDQ";
+// process.env.AWS_SECRET_ACCESS_KEY = "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";
+// myConfig = new aws.Config();
+// myConfig.update({
+//   region: 'ap-south-1'
+// });
+
+
+//////////////////////////////////////////////////////////////////////////////////
+////// For resume submission in S3 then inserted in googlesheet///////////////////
+//////////////////////////////////////////////////////////////////////////////////
+AWS.config.region = 'ap-south-1'; // Region
+AWS.config.apiVersions = {
+    s3: 'latest'
+};
+AWS.config.credentials = new AWS.CognitoIdentityCredentials({
+    IdentityPoolId: 'ap-south-1:0b6fa64b-9335-49a4-811d-0c8d065b15d2',
 });
+s3 = new AWS.S3(AWS.config);
+
+let nework = async(req, res) =>{
+  console.log("Started nework");
+  const {firstName, lastName, email, phone, gender} = req.body;
+  console.log("File details are\n", req.files);
+  if(!(firstName && lastName && email && phone && gender)){
+    console.log("Fill all required details")
+    res.redirect("/nework");
+  }else if(req.files.resume){
+    const date = new Date();
+    let params = {Bucket: 'konfinity/resume', 
+                        Key: (date+email+".pdf"), 
+                        Body: req.files.resume.data,
+                        ACL: "public-read-write",
+                        StorageClass: "STANDARD"
+        };
+        s3.upload(params,async function(err, data) {
+            if(err){
+                console.log("Errorn in S3 upload ", err);
+                res.redirect("/nework");
+            }
+            else{
+                console.log(data.Location)
+                const doc = new GoogleSpreadsheet("1tf2mfuRLh1N-cERelPFzbGxkKmhz3dPdL_rR7KhpV8M");
+                await doc.useServiceAccountAuth(cred);
+                await doc.loadInfo(); // loads sheets
+                const sheet = doc.sheetsByIndex[0]; // the first sheet
+                
+                // add new row, returns a GoogleSpreadsheetRow object
+                const sundar = await sheet.addRow({ first_name: firstName, last_name: lastName,email: email, phone: phone, gender: gender, resume: data.Location });
+                console.log("Data uploaded to worksheet",sundar);
+                res.redirect("/nework");
+            }
+        });
+  }else{
+    console.log("Didn't get resume file from form\n");
+    res.redirect("/nework");
+  }
+}
+//////////////////////////////////////////////////////////////////////////////////
+////// Resume submission in S3 then inserted in googlesheet Ends here/////////////
+//////////////////////////////////////////////////////////////////////////////////
+
 // var upload = multer({
 //   storage: multerS3({
 //     s3: s3,
@@ -351,5 +402,6 @@ module.exports = {
     delete        : del,
     edit          : edit,
     update        : update,
-    test          : test
+    test          : test,
+    nework        : nework
 }

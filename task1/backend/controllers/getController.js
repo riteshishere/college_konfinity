@@ -37,8 +37,13 @@ let test = (req,res)=>{
     res.render("testing");
 }
 
+let nework = (req, res)=>{
+    res.render("nework")
+}
+
 module.exports = {
     users : users,
     register: register,
-    test: test
+    test: test,
+    nework: nework
 };

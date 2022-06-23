@@ -19,7 +19,7 @@
         "express-fileupload": "^1.1.6",
         "express-session": "^1.16.2",
         "google-spreadsheet": "^3.0.8",
-        "jsdom": "^15.1.1",
+        "jsdom": "^16.5.0",
         "jsonwebtoken": "^8.5.1",
         "localtunnel": "^1.9.2",
         "mongoose": "^5.8.11",
